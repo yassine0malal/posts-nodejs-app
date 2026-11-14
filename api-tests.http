@@ -1,0 +1,28 @@
+### Get all the posts
+GET http://localhost:3000/api/posts
+
+### Get by id of post
+GET http://localhost:3000/api/posts/34
+
+### Create a post
+POST http://localhost:3000/api/posts
+Content-Type: application/json
+
+{
+    "userId": 1,
+    "title": "Mon nouveau post",
+    "body": "Ceci est le contenu de mon nouveau post créé via l'API"
+}
+
+### Update a post
+PUT http://localhost:3000/api/posts/105
+Content-Type: application/json
+
+{
+    "userId": 1,
+    "title": "Titre mis à jour",
+    "body": "Contenu mis à jour"
+}
+
+### Delete a post
+DELETE http://localhost:3000/api/posts/103
