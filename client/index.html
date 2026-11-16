@@ -7,8 +7,6 @@
     <title>Document</title>
 </head>
 <style>
-    
-
     table {
         border-collapse: collapse;
     }
@@ -25,13 +23,68 @@
 
     }
 
+    /* #actions tr{
+        padding: 0;
+        margin: 0;
+    } */
     table tbody tr {
-        border-bottom: 1px solid #462f2f;
+        /* border-bottom: 1px solid #462f2f; */
         transition: background-color 0.2s ease;
+    }
+
+    #actions {
+        display: flex;
+        column-gap: 17px;
+        align-items: center;
+        border: none;
+        padding-top: 20px;
+    }
+
+    #actions td {
+        /* border-bottom: none;
+        display: flex;
+        align-content: center;
+        align-items: center; */
+    }
+
+    button {
+        padding: 8px 16px;
+        border-radius: 5px;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    button:hover {
+        transform: scale(1.1);
+
+    }
+
+    .update {
+        background-color: rgba(177, 255, 59, 0.726);
+    }
+
+    .delete {
+        background-color: rgba(255, 64, 64, 0.726);
+    }
+
+    .container {
+        padding: 8px 16px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .container button{
+        background: #5b5a5a;
+        color: aliceblue;
+        max-height: 40px;
     }
 </style>
 
 <body>
+    <div class="container">
+        <h2>Our blogs</h2>
+        <button onclick="redirect()"> Add Post</button>
+    </div>
     <table id="table">
         <thead>
             <tr>
@@ -39,6 +92,8 @@
                 <td>UserID</td>
                 <td>Title</td>
                 <td>Body</td>
+                <td>Action</td>
+
             </tr>
         </thead>
         <tbody>
@@ -48,6 +103,31 @@
     </table>
 
     <script>
+        function updatePost(event, id) {
+            localStorage.setItem("idUpdated", id);
+            window.location.href = `update.html`;
+            // console.log("dd", event)
+
+        }
+        async function deletePost(event, id) {
+            try {
+                const response = await fetch(`http://localhost:3000/api/posts/${id}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                })
+                if (!response.ok) {
+                    throw new Error(`Response status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log("ok")
+
+            } catch (error) {
+                console.log("deletion not successed: ", error)
+            }
+        }
+
         async function getAllPosts() {
             try {
                 const response = await fetch("http://localhost:3000/api/posts");
@@ -65,7 +145,6 @@
 
             const tbody = document.querySelector("#table tbody");
             console.log("--", posts)
-            // tbody.innerHTML = "";
             posts.map((ele) => {
                 const tr = `
                     <tr>
@@ -73,6 +152,10 @@
                         <td>${ele.userId}</td>
                         <td>${ele.title}</td>
                         <td>${ele.body}</td>
+                        <td id="actions">
+                            <button class="update" onclick="updatePost(event,${ele.id})">Update</button>
+                            <button class="delete" onclick="deletePost(event,${ele.id})">Delete</button>
+                        </td>
                     </tr>
                 `;
                 tbody.insertAdjacentHTML("beforeend", tr)
@@ -81,6 +164,10 @@
         })
 
 
+
+        function redirect(){
+            location.href= "add.html";
+        }
 
 
     </script>

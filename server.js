@@ -122,7 +122,10 @@ const server = http.createServer((request, response) => {
 
 
     // DELETE /api/posts/:id - Supprimer un post
-
+    else if(method == "OPTIONS"){
+        response.writeHead(204);
+        response.end();
+    }
     else if (pathname.startsWith('/api/posts/') && method == "DELETE") {
         if (!pathname.split('/')[3]) {
             console.error("error the id was not sended ");

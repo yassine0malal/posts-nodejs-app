@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Post</title>
+    <style>
+        body {
+            display: flex;
+            text-align: center;
+            justify-content: center;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 500px;
+            gap: 12px;
+            /* Cleaner alternative to margins */
+            padding: 16px;
+        }
+
+        form input,
+        button {
+            margin: 12px;
+            max-width: 500px;
+            padding: 14px;
+        }
+
+        button {
+            margin-left: 23px;
+        }
+    </style>
+</head>
+
+<body>
+    <form action="" method="post">
+        <input type="text" name="userId" placeholder="User ID ">
+        <input type="text" name="title" placeholder="Title ">
+        <input type="text" name="body" placeholder="Body description">
+        <button type="submit">Update</button>
+    </form>
+
+    <script>
+        const form = document.querySelector("form");
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const idUpdated = localStorage.getItem("idUpdated");
+
+            const formData = new FormData(form)
+            const data = Object.fromEntries(formData.entries());
+            console.log(data)
+            console.log("id delted ", idUpdated)
+
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/posts/${idUpdated}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                });
+                if (!response.ok) {
+                    throw new Error(`Response status ${response.status}`);
+                }
+                localStorage.removeItem("idUpdated");
+
+                const dd = await response.json()
+                console.log("ok", dd);
+            } catch (error) {
+                console.log("err", error);
+            }
+            window.location.href = `index.html`;
+
+        })
+
+
+
+    </script>
+</body>
+
+</html>
